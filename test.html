@@ -75,6 +75,9 @@
 			border-left:6px solid #983b12;
 			border-radius:4px 0 0 4px;
 		}
+		.contain>div>div{
+			margin-bottom:5px;
+		}
 		.contain button{
 			font-size:14px;
 			padding:3px 8px;
@@ -88,6 +91,18 @@
 			border-radius:4px;
 			border:1px solid #c6deb3;
 		}
+		.bind-color{
+			color:cornflowerblue;
+		}
+		.bind-bg{
+			background:black;
+		}
+		.bind-border{
+			border:1px solid #ccc;
+		}
+		.bind-radius{
+			border-radius:5px;
+		}
 	</style>
 </head>
 <body>
@@ -96,36 +111,212 @@
 	</div>
 	<div class="contain">
 		<div id="example0">
-			<h3>example 0</h3>
-			<p>{{message}}</p>
+			<h3>example 0 eg:model</h3>
+			<p>{{message+1}}</p>
 			<input v-model="message" />
 		</div>
 		<div id="example1">
-			<h3>example 1</h3>
+			<h3>example 1 eg:数组遍历</h3>
+			<p>eq1</p>
 			<div v-for="lis in list">
-				<span style="padding-right:10px;">{{lis.name}}:</span>
+				<span>第{{$index}}个：{{lis.name}}：</span>
+				<span>{{lis.age}}</span>
+			</div>
+			<p>eq2</p>
+			<div v-for="lis of list">
+				<span>第{{$index}}个：{{lis.name}}：</span>
+				<span>{{lis.age}}</span>
+			</div>
+			<p>eq3</p>
+			<div v-for="(i,lis) in list">
+				<span>第{{i}}个：{{lis.name}}：</span>
 				<span>{{lis.age}}</span>
 			</div>
 		</div>
 		<div class="example2">
-			<h3>example 2</h3>
+			<h3>example 2 eg:onclick</h3>
 			<p>{{message}}</p>
 			<button v-on:click="changeMess">change message</button>
 		</div>
 		<div id="example3">
-			<h3>example 3</h3>
+			<h3>example 3 eg:增删</h3>
 			<input v-model="newsli" v-on:keyup.enter="addMess" />
 			<div v-for="lis in list">
 				<span>{{lis.message}}</span>
 				<button v-on:click="removeMess">删除</button>
 			</div>
 		</div>
+		<div id="example4">
+			<h3>example 4 eg:$watch</h3>
+			<div>{{message}}</div>
+		</div>
+		<div id="example5">
+			<h3>example 5 eg:created</h3>
+			<div>{{time}}</div>
+		</div>
+		<div id="example6">
+			<h3>example 6 eg:修改属性</h3>
+			<p id="{{message}}">message as ID</p>
+		</div>
+		<div id="example7">
+			<h3>example 7 eg:filter</h3>
+			<p>filter:{{message | overSize}}</p>
+		</div>
+		<div id="example8">
+			<h3>example 8 eg:v-if</h3>
+			<p v-if="message">if就是不显示</p>
+			<p v-else>else就是要显示</p>
+		</div>
+		<div id="example9">
+			<h3>example 9 eg:computed</h3>
+			<p>my age:{{age}}</p>
+			<p>fullName:{{fullName}}</p>
+		</div>
+		<div id="example10">
+			<h3>example 10 eg:bind class style</h3>
+			<div v-bind:class="classlist">绑定样式1</div>
+			<div v-bind:class="[class1,class2]">绑定样式2</div>
+			<div v-bind:class="[class2,is1 ? class1 : class3]">绑定样式3</div>
+			<div v-bind:style="{fontSize:0.8+'em'}">绑定样式4</div>
+			<div v-bind:style="stylelist">绑定样式5</div>
+		</div>
+		<template v-if="ok">
+			<h3>example</h3>
+		</template>
+		<div id="example11">
+			<h3>example 11 eg:遍历对象</h3>
+			<p>eq1</p>
+			<div v-for="item in people">{{$key}}:{{item}}</div>
+			<p>eq2</p>
+			<div v-for="(key,item) in people">{{key}}:{{item}}</div>
+		</div>
+		<div id="example12">
+			<h3>example 12 eg:遍历整数</h3>
+			<span style="padding-right:10px" v-for="n in 10">{{n}}</span>
+		</div>
 	</div>
-	<script src="https://npmcdn.com/vue/dist/vue.js"></script>
+	<!-- <script src="https://npmcdn.com/vue/dist/vue.js"></script> -->
+	<script src="D:/sj/vueJS/vue.js"></script>
 	<script>
 	window.onload = function(){
 		var maskLayer = document.getElementById("maskLayer");
 		maskLayer.style.display = "none";
+
+		//example 12
+		new Vue({
+			el:"#example12"
+		})
+
+		//example 11
+		new Vue({
+			el:"#example11",
+			data:{
+				people:{
+					name:"Sherlock",
+					favour:"Watson"
+				}
+			}
+		})
+
+		//example 10
+		new Vue({
+			el:"#example10",
+			data:{
+				classlist:{
+					'bind-color':true,
+					'bind-bg':true
+				},
+				class1:"bind-color",
+				class2:"bind-border",
+				class3:"bind-radius",
+				is1:false,
+				stylelist:{
+					padding:'0 10px',
+					fontSize:'1.2em'
+				}
+			}
+		})
+
+		//example 9
+		var example9_vm = new Vue({
+			el:"#example9",
+			data:{
+				prevage:15,
+				firstName:"Sherlock",
+				lastName:"Holmes"
+			},
+			computed:{
+				age:function(){
+					return this.prevage +10
+				},
+				fullName:{
+					get:function(){
+						return this.firstName+' '+this.lastName
+					},
+					set:function(_fullName){
+						var name = _fullName.split(' ');
+						this.firstName = name[0];
+						this.lastName = name[1];
+					}
+				}
+			}
+		})
+
+		//example 8
+		new Vue({
+			el:"#example8",
+			data:{
+				message:false
+			}
+		})
+
+		//example 7
+		new Vue({
+			el:"#example7",
+			data:{
+				message:33
+			},
+			filters:{
+				overSize:function(_mess){
+					if(_mess>22){
+						return _mess
+					}
+				}
+			}
+		})
+
+		//example 6
+		var example6_vm = new Vue({
+			el:"#example6",
+			data:{
+				message:80
+			}
+		})
+
+		//example 5
+		new Vue({
+			el:"#example5",
+			data:{
+				time:"17:00"
+			},
+			created:function(){
+				console.log("created")
+			}
+		})
+
+		//example 4
+		var example4_data = {message:666}
+		var example4_vm = new Vue({
+			el:"#example4",
+			data:example4_data
+		})
+		setTimeout(function(){
+			example4_vm.message = 777;
+		},1000)
+		
+		example4_vm.$watch("message",function(_new,_old){
+			console.log(_old,_new);
+		});//监听message的变化
 
 		//example 3
 		new Vue({
@@ -180,7 +371,7 @@
 		new Vue({
 			el:"#example0",
 			data:{
-				message:"呵呵"
+				message:4
 			}
 		});
 

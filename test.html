@@ -194,6 +194,27 @@
 			<h3>example 12 eg:遍历整数</h3>
 			<span style="padding-right:10px" v-for="n in 10">{{n}}</span>
 		</div>
+		<div id="example13">
+			<h3>example 13 eg:v-on</h3>
+			<button v-on:click="counter += 1">click me</button>
+			<p>已经点击了{{counter}}次</p>
+			<button v-on:click="warn('cannot be submitted',$event)">click me</button>
+			<button v-on:click.stop="stop">click me</button>
+			<div>to input something and move left or right</div>
+			<input v-on:keyup.left="move('left')" @keyup.right="move('right')" v-on:keyup.enter="move('enter')" type="text">
+		</div>
+		<div id="example14">
+			<h3>example 14 eg:v-model</h3>
+			<input type="checkbox" value="Wang" v-model="checkName">
+			<label for="Wang">Wang</label>
+			<input type="checkbox" value="Huo" v-model="checkName">
+			<label for="Huo">Huo</label>
+			<input type="checkbox" value="Zhao" v-model="checkName">
+			<label for="Zhao">Zhao</label>
+			<div>is check：{{checkName}}</div>
+		</div>
+		<input type="number">
+		<input type="email">
 	</div>
 	<!-- <script src="https://npmcdn.com/vue/dist/vue.js"></script> -->
 	<script src="D:/sj/vueJS/vue.js"></script>
@@ -201,6 +222,36 @@
 	window.onload = function(){
 		var maskLayer = document.getElementById("maskLayer");
 		maskLayer.style.display = "none";
+
+		//example 14
+		new Vue({
+			el:"#example14",
+			data:{
+				checkName:[]
+			}
+		})
+
+		//example 13
+		new Vue({
+			el:"#example13",
+			data:{
+				counter:0
+			},
+			methods:{
+				warn:function(_mess,event){
+					if(event){
+						event.preventDefault();
+						alert(_mess);
+					}
+				},
+				stop:function(){
+					console.log("stop")
+				},
+				move:function(_direct){
+					alert("move "+_direct);
+				}
+			}
+		})
 
 		//example 12
 		new Vue({

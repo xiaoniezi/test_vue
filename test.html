@@ -213,13 +213,157 @@
 			<label for="Zhao">Zhao</label>
 			<div>is check：{{checkName}}</div>
 		</div>
+		<div id="example15">
+			<h3>example 15 eg:表单参数</h3>
+			<p>eq1 修改完后再与data同步</p>
+			<p>
+				<input v-model="lazy_data" lazy>
+				<label>{{lazy_data}}</label>
+			</p>
+			<p>eq2 转变为number类型</p>
+			<p>
+				<input v-model="number_data" number>
+				<label>{{num_type}}</label>
+			</p>
+			<p>eq3 延迟1s同步数据</p>
+			<p>
+				<input v-model="debounce_data" debounce="1000">
+				<label>{{debounce_data}}</label>
+			</p>
+		</div>
+		<style>
+			.expand-transition{
+				transition:all 0.5s linear;
+				height:30px;
+				padding:10px;
+				background:#eee;
+				overflow:hidden;
+				color:green;
+			}
+			.expand-enter,.expand-leave{
+				padding:0 10px;
+				opacity:0;
+				height:0;
+				color:red;
+			}
+		</style>
+		<div id="example16">
+			<h3>example 16 eq:transition</h3>
+			<div>
+				<button v-on:click="expandClick">click me</button>
+				<div v-if="show" transition="expand">哒哒哒</div>
+			</div>
+		</div>
+		<style>
+			.stagger-transition{
+				transition:all 0.5s linear;
+				overflow:hidden;
+				margin:0;
+				height:30px;
+			}
+			.stagger-enter,.stagger-leave{
+				opacity:0;
+				height:0;
+			}
+		</style>
+		<div id="example17">
+			<h3>example 17 eq:stagger</h3>
+			<input v-model="query">
+			<ul>
+				<li v-for="lis in list | filterBy query" transition="stagger" stagger="100">{{lis.name}}</li>
+			</ul>
+		</div>
+
 	</div>
 	<script src="https://npmcdn.com/vue@1.0.26/dist/vue.js"></script>
-	<!-- <script src="D:/sj/vueJS/vue.js"></script> -->
+	
 	<script>
 	window.onload = function(){
 		var maskLayer = document.getElementById("maskLayer");
 		maskLayer.style.display = "none";
+
+		//example
+		var example_data = {
+			a:22
+		}
+		var example_vm = new Vue({
+			data:example_data
+		})
+
+		//example 17
+		new Vue({
+			el:"#example17",
+			data:{
+				query:'',
+				list:[
+					{name:"Bobi"},
+					{name:"Sim"},
+					{name:"Sea"},
+					{name:"Ayb"}
+				],
+				transitionName:"stagger"
+			}
+		})
+		Vue.transition("stagger",{
+			stagger:function(index){
+				return Math.min(300,index*50)
+			}
+		})
+
+		//example 16
+		new Vue({
+			el:"#example16",
+			data:{
+				show:true,
+				transitionName:"expand"
+			},
+			methods:{
+				expandClick:function(){
+					this.show = !this.show
+				}
+			}
+		})
+		Vue.transition("expand",{
+			beforeEnter:function(el){
+			//	console.log("beforeEnter")
+			},
+			enter:function(el){
+			//	console.log("enter")
+			},
+			afterEnter:function(el){
+			//	console.log("afterEnter")
+			},
+			enterCancelled:function(el){
+			//	console.log("enterCancelled")
+			},
+			beforeLeave:function(el){
+			//	console.log("beforeLeave")
+			},
+			leave:function(el){
+			//	console.log("leave")
+			},
+			afterLeave:function(el){
+			//	console.log("afterLeave")
+			},
+			leaveCancelled:function(el){
+			//	console.log("leaveCancelled")
+			}
+		})
+
+		//example 15
+		new Vue({
+			el:"#example15",
+			data:{
+				lazy_data:30,
+				number_data:'20',
+				debounce_data:10
+			},
+			computed:{
+				num_type:function(){
+					return typeof(this.number_data);
+				}
+			}
+		})
 
 		//example 14
 		new Vue({

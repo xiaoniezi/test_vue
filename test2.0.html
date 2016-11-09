@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content=""/>
+		<meta name="keywords" content="html"/>
+		<meta name="author" content="Shyla Nie"/>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+		<meta name="format-detection" content="telphone=no, email=no"/>
+		<meta name="full-screen" content="yes">
+		<meta name="x5-fullscreen" content="true">
+		<title>Vue 2.0</title>
+		<style type="text/css">
+			*{
+				padding:0;
+				margin:0;
+			}
+			body{
+				margin:0 auto;
+				font-size:24px;
+				font-weight:700;
+				background-color:#f5f5dc;
+			}
+			.mask-layer{
+				position:fixed;
+				width:100%;
+				height:100%;
+				background-color:black;
+			}
+			#awesome-dots{
+		        position:relative;
+		        margin: 0 auto;
+		        top: 300px;
+		        width: 100px;
+		        height: 30px;
+		        background: radial-gradient(circle at 15px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 40px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 65px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 90px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px);
+		        animation: load 3s 400ms linear infinite;
+		    }
+
+		    @keyframes load{
+		        0% {
+		          opacity: 0;
+		          transform: translateX(-300px);
+		        }
+		        33% {
+		          opacity: 0.8;
+		          transform: translateX(-100px);
+		        }
+		        50%{
+		          opacity: 1;
+		          transform: translateX(0px);
+		        }
+		        66% {
+		          opacity: 0.8;
+		          tranform: translateX(100px);
+		        }
+		        100% {
+		          opacity: 0;
+		          transform: translateX(300px);
+		        }
+		    }
+
+			.contain{
+				width:90%;
+				margin:0 auto;
+				padding:10px 0;
+			}
+			.contain>div{
+				margin-bottom:20px;
+			}
+			.contain>div>h3{
+				color:brown;
+				padding-left:3px;
+				margin-bottom:5px;
+				border-left:6px solid #983b12;
+				border-radius:4px 0 0 4px;
+			}
+			.contain>div>div{
+				margin-bottom:5px;
+			}
+			.contain button{
+				font-size:14px;
+				padding:3px 8px;
+				background:#fff;
+				border-radius:4px;
+				border:1px solid #ccc;
+			}
+			.contain input{
+				font-size:14px;
+				padding:3px 5px;
+				border-radius:4px;
+				border:1px solid #c6deb3;
+			}
+			.red{
+				color:red;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="maskLayer" class="mask-layer">
+			<div id="awesome-dots"></div>
+		</div>
+		<div class="contain">
+		<!--	component start		-->
+			<div id="example0">
+				<h3>example 0 eq:全局注册</h3>
+				<example-0></example-0>
+			</div>
+			<div id="example1">
+				<h3>example 1 eq:局部注册</h3>
+				<example-1></example-1>
+			</div>
+			<div id="example2">
+				<h3>example 2 eq:data函数</h3>
+				<div>
+					<example-2a></example-2a>
+					<example-2a></example-2a>
+				</div>
+				<div>
+					<example-2b></example-2b>
+					<example-2b></example-2b>
+				</div>
+			</div>
+			<div id="example3">
+				<h3>example 3 eq:prop</h3>
+				<div>
+					<input v-model.number="say">
+					<example-3 :message="say"></example-3>
+					<span>{{num_type}}</span>
+				</div>
+			</div>
+			<div id="example4">
+				<h3>example 4 eq:监听子级</h3>
+				<div>{{total}}</div>
+				<example-4 v-on:increment="increTotal"></example-4>
+				<example-4 v-on:increment="increTotal"></example-4>
+			</div>
+			<div id="example5">
+				<h3>example 5</h3>
+				<div>{{fullName}}</div>
+				<example-5 v-on:submit="getFullName"></example-5>
+				<example-5 v-on:submit="getFullName"></example-5>
+			</div>
+			<div id="example6">
+				<h3>example 6 eq:监听子级(表单)</h3>
+				<div>{{message}}</div>
+				<example-6 label="islabel" v-model="message"></example-6>
+			</div>
+			<div id="example7">
+				<h3>example 7 eg:单个slot</h3>
+				<div>I am father</div>
+				<example-7>
+					<div>有我就不显示slot啦</div>
+				</example-7>
+			</div>
+			<div id="example8">
+				<h3>example 8 eg:具名slot</h3>
+				<div>I am father</div>
+				<example-8>
+					<p slot="header">我才是header</p>
+				</example-8>
+			</div>
+			<div id="example9">
+				<h3>example 9 eg:动态组件</h3>
+				<button v-on:click="changeComp(0)">change</button>
+				<button v-on:click="changeComp(1)">change</button>
+				<button v-on:click="changeComp(2)">change</button>
+				<div>
+					<keep-alive>
+					<example-9 v-bind:is="currentComp"></example-9>
+					</keep-alive>
+				</div>
+			</div>
+			<div id="example10">
+				<h3>example 10 eg:索引ref</h3>
+				<example-10></example-10>
+				<example-10 ref="ex10Ref"></example-10>
+			</div>
+			<div id="example11">
+				<h3>example 11 eg:x-template</h3>
+				<example-11></example-11>
+			</div>
+		<!--	component end		-->
+
+			<div id="example12">
+				<h3>example 12 eq:计算属性</h3>
+				<div>{{message}}</div>
+				<div>{{c_message()}}</div>
+			</div>
+			<div id="example13">
+				<h3>example 13 eq:对象迭代</h3>
+				<div v-for="(value,key) in list">{{key}}：{{value}}</div>
+			</div>
+			<div id="example14">
+				<h3>example 14</h3>
+				<p><span v-for="item in number">{{item}}-</span></p>
+				<span v-for="item in list">{{item}}-</span>
+				<p><span v-for="item in filterNum(number)">{{item}}-</span></p>
+			</div>
+			<div id="example15">
+				<h3>example 15</h3>
+				<p>
+					<span>h{{level}}</span>
+					<button v-on:click="levelCount">click</button>
+				</p>
+				<example-15 v-bind:level="level">Hello World</example-15>
+			</div>
+		</div>
+		<script src="https://npmcdn.com/vue@2.0.5/dist/vue.js"></script>
+		
+		<script type="text/x-template" id="ex11Temp">
+			<button>x-template</button>
+		</script>
+		<script type="text/x-template">
+			<div>
+				
+			</div>
+		</script>
+		<script>
+			window.onload = function(){
+				var maskLayer = document.getElementById("maskLayer");
+				maskLayer.style.display = "none";
+
+				//example 15
+				var ex15GetContent = function(children){
+					return children.map(function(node){
+						return node.children ? ex15GetContent(node.children) : node.text
+					}).join('')
+				}
+				Vue.component("example-15",{
+					render:function(createElement){
+						var headingID = ex15GetContent(this.$slots.default)
+							.toLowerCase()
+							.replace(/\W+/g,'-')
+							.replace(/(^\-|\-$)/g,'')
+						return createElement('h'+this.level,[
+								createElement('a',{
+									attrs:{
+										name:headingID,
+										href:"#"+headingID
+									}
+								},this.$slots.default)
+							])
+						/*相当于：
+						<a name="headingID" href="#headingID">
+							this.$slots.default
+						</a>*/
+					},
+					props:{
+						level:{
+							type:Number,
+							required:true
+						}
+					}
+				})
+				new Vue({
+					el:"#example15",
+					data:{
+						level:1
+					},
+					methods:{
+						levelCount:function(){
+							this.level += 1
+							if(this.level >= 7){
+								this.level = 1
+							}
+						}
+					}
+				})
+
+				//example 14
+				new Vue({
+					el:"#example14",
+					data:{
+						number:[1,44,6,9,43,98]
+					},
+					computed:{
+						list:function(){
+							return this.number.filter(function(number){
+								return number%2 === 0
+							})
+						}
+					},
+					methods:{
+						filterNum:function(){
+							return this.number.filter(function(number){
+								return number%2 === 0
+							})
+						}
+					}
+				})
+
+				//example 13
+				new Vue({
+					el:"#example13",
+					data:{
+						list:{
+							name:'she',
+							age:60,
+							collect:3
+						}
+					}
+				})
+
+				//example 12
+				new Vue({
+					el:"#example12",
+					data:{
+						message:"leave"
+					},
+					methods:{
+						c_message:function(){
+							return this.message.split('').reverse().join('')
+						}
+					}
+				})
+
+				//example 11
+				Vue.component("example-11",{
+					template:"#ex11Temp"
+				})
+				new Vue({
+					el:"#example11"
+				})
+
+				//example 10
+				var ex10Comp = {
+					template:"<button v-bind:style='styleType'>change color</button>",
+					data:function(){
+						return{
+							styleType:{
+								color:"red"
+							}
+						}
+					}
+				}
+				var ex10Vm = new Vue({
+					el:"#example10",
+					components:{
+						"example-10":ex10Comp
+					}
+				})
+				var ex10Child = ex10Vm.$refs.ex10Ref
+				ex10Child.styleType.color = "green"
+				
+
+				//example 9
+				var ex9Btn_0 = {
+					template:"<button>first</button>"
+				}
+				var ex9Btn_1 = {
+					template:"<button>second</button>"
+				}
+				var ex9Btn_2 = {
+					template:"<button>third</button>"
+				}
+				new Vue({
+					el:"#example9",
+					data:{
+						currentComp:ex9Btn_0,
+						compList:[ex9Btn_0,ex9Btn_1,ex9Btn_2]
+					},
+					methods:{
+						changeComp:function(_index){
+							console.log(_index)
+							this.currentComp = this.compList[_index]
+						}
+					}
+				})
+
+				//example 8
+				var ex8Comp = {
+					template:"\
+						<div>\
+							<p>I am child</p>\
+							<div><slot class='red' name='header'>我是header</slot></div>\
+							<div><slot name='footer'>我是footer</slot></div>\
+						</div>\
+					"
+				}
+				new Vue({
+					el:"#example8",
+					components:{
+						"example-8":ex8Comp
+					}
+				})
+
+				//example 7
+				Vue.component("example-7",{
+					template:"\
+						<div>\
+							<p>I am child</p>\
+							<slot>显示我呀</slot>\
+						</div>\
+					"
+				})
+				new Vue({
+					el:"#example7"
+				})
+
+				//example 6
+				Vue.component("example-6",{
+					template:"\
+					<div>\
+						<label v-bind:for='randomID'>{{label}}:</label>\
+						<input v-bind:id='randomID' v-bind:value='value' v-on:input='onInput'>\
+					</div>\
+					",//value就是message的值
+					props:['value','label'],
+					data:function(){
+						return{
+							randomID:'input-'+Math.random()
+						}
+					},
+					methods:{
+						onInput:function(event){
+							this.$emit("input",event.target.value)
+						}
+					}
+				})
+				new Vue({
+					el:"#example6",
+					data:{
+						message:'hello'
+					}
+				})
+
+				//example 5
+				var ex5FullName
+				var ex5Input = "<input v-model='name'>"
+				var ex5Button = "<button v-on:click='submit'>submit</button>"
+				Vue.component("example-5",{
+					template:"<div>"+ex5Input+ex5Button+"</div>",
+					data:function(){
+						return{
+							name:''
+						}
+					},
+					methods:{
+						submit:function(){
+							ex5FullName = this.name
+							this.$emit("submit")
+						}
+					}
+				})
+				var ex5Vm = new Vue({
+					el:"#example5",
+					data:{
+						fullName:'hey'
+					},
+					methods:{
+						getFullName:function(){
+							this.fullName = ex5FullName
+						}
+					}
+				})
+				
+
+				//example 4
+				Vue.component("example-4",{
+					template:"<button v-on:click='increment'>{{counter}}</button>",
+					data:function(){
+						return{
+							counter:0
+						}
+					},
+					methods:{
+						increment:function(){
+							this.counter += 1
+							this.$emit("increment")
+						}
+					}
+				})
+				new Vue({
+					el:"#example4",
+					data:{
+						total:0
+					},
+					methods:{
+						increTotal:function(){
+							this.total += 1
+						}
+					}
+				})
+
+				//example 3
+				Vue.component("example-3",{
+					props:{
+						"message":{
+							type:Number,
+							required:true,
+							default:0
+						}
+					},
+					template:"<span>{{message}}</span>"
+				})
+				new Vue({
+					el:"#example3",
+					data:{
+						say:33
+					},
+					computed:{
+						num_type:function(){
+							return typeof(this.say);
+						}
+					}
+				})
+
+				//example 2
+				var ex2Child = {
+					template:"<button v-on:click='counter_b +=1'>{{counter_b}}</button>",
+					data:function(){
+						return {
+							counter_b:0//每个组件返回新的data
+						}
+					}
+				}
+				var ex2Data = {
+					counter_a:0
+				}
+				Vue.component("example-2a",{
+					template:"<button v-on:click='counter_a +=1'>{{counter_a}}</button>",
+					data:function(){
+						return ex2Data//每个组件都是同一个data
+					}
+				})
+				new Vue({
+					el:"#example2",
+					components:{
+						"example-2b":ex2Child
+					}
+				})
+
+				//example 1
+				var ex1Child = {
+					template:"<div>just a component</div>"
+				}
+				new Vue({
+					el:"#example1",
+					components:{
+						'example-1':ex1Child
+					}
+				})
+
+				//example 0
+				Vue.component("example-0",{
+					template:"<div>I am just a component</div>"
+				})
+				new Vue({
+					el:"#example0"
+				})
+			}
+		</script>
+	</body>
+</html>

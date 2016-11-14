@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content=""/>
+		<meta name="keywords" content="html"/>
+		<meta name="author" content="Shyla Nie"/>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+		<meta name="format-detection" content="telphone=no, email=no"/>
+		<meta name="full-screen" content="yes">
+		<meta name="x5-fullscreen" content="true">
+		<title>todoList</title>
+		<link href="http://sj-public.b0.upaiyun.com/css/bootstrap-common.min.css" rel="stylesheet" >
+	    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"> -->
+	    <style>
+		    *{
+				margin:0;
+				padding:0;
+			}
+	    	body{
+				margin:0 auto;
+				position:relative;
+				background-color:#f5f5dc;
+			}
+			.mask-layer{
+				position:fixed;
+				width:100%;
+				height:100%;
+				background-color:black;
+			}
+			#awesome-dots{
+		        position:relative;
+		        margin: 0 auto;
+		        top: 300px;
+		        width: 100px;
+		        height: 30px;
+		        background: radial-gradient(circle at 15px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 40px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 65px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 90px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px);
+		        animation: load 3s 400ms linear infinite;
+		    }
+
+		    @keyframes load{
+		        0% {
+		          opacity: 0;
+		          transform: translateX(-300px);
+		        }
+		        33% {
+		          opacity: 0.8;
+		          transform: translateX(-100px);
+		        }
+		        50%{
+		          opacity: 1;
+		          transform: translateX(0px);
+		        }
+		        66% {
+		          opacity: 0.8;
+		          tranform: translateX(100px);
+		        }
+		        100% {
+		          opacity: 0;
+		          transform: translateX(300px);
+		        }
+		    }
+			#todo {
+			  	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+			    -webkit-font-smoothing: antialiased;
+			    -moz-osx-font-smoothing: grayscale;
+			    text-align: center;
+			    color: #2c3e50;
+			    width:90%;
+			    margin:0 auto;
+			    padding:60px 0;
+			    max-width:960px;
+			    overflow:hidden;
+			}
+			ul{
+			    list-style-type: none;
+			    padding: 0;
+			}
+			li{
+			    margin: 0 10px;
+			}
+			a{
+			    color: #42b983;
+			}
+			.bg-green{
+				background:rgba(197, 228, 197, 0.5);
+			}
+			.bg-white{
+				background:white;
+			}
+			.table-list{
+				border:1px solid #42b983;
+			}
+			.table-list th{
+				text-align:center;
+				border:1px solid #42b983 !important;
+			}
+			.table-list td{
+				border:1px solid #42b983 !important;
+				vertical-align:middle !important;
+			}
+			.table-list tr{
+				transition:all 0.3s;
+			}
+			.table-list tr:hover{
+				background:rgba(189,183,107,0.5);
+			}
+			.table-list .btn{
+				margin-right:10px;
+			}
+			.add-list{
+				width:100%;
+				text-align:left;
+				margin:10px 0 20px;
+			}
+			.add-list input:not([type="checkbox"]),
+			.search-list input,
+			.table-list td>input{
+				display:inline-block;
+				padding:6px 12px;
+				height:34px;
+				width:15%;
+				margin-right:5px;
+				border-radius:4px;
+				border:1px solid #ccc;
+				box-shadow:inset 0 1px 1px rgba(0,0,0,0.01);
+			}
+			.table-list td>input{
+				width:90%;
+				margin:0 auto;
+				height:28px;
+				max-width:90px;
+			}
+			.table-list td>input[type="checkbox"]{
+				height:25px;
+				width:25px;
+			}
+			.add-list input[type="checkbox"]{
+				height:20px;
+				width:20px;
+				vertical-align:-0.3em;
+			}
+			.add-list .btn{
+				margin-left:10px;
+			}
+			.search-list{
+				text-align:left;
+				margin:5px 0 10px 30px;
+			}
+			.search-list input{
+				width:35%;
+			}
+			.zoom-leave-active{
+				animation:zoomOut 1s;
+				-webkit-animation:zoomOut 1s;
+			}
+			.zoom-enter-active{
+				animation:zoomInDown 1s;
+				-webkit-animation:zoomInDown 1s;
+			}
+			@-webkit-keyframes zoomInDown {
+			  from {
+			    opacity: 0;
+			    -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+			    transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+			    -webkit-animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+			    animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+			  }
+
+			  60% {
+			    opacity: 1;
+			    -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+			    transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+			    -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+			    animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+			  }
+			}
+
+			@keyframes zoomInDown {
+			  from {
+			    opacity: 0;
+			    -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+			    transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+			    -webkit-animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+			    animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+			  }
+
+			  60% {
+			    opacity: 1;
+			    -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+			    transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+			    -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+			    animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+			  }
+			}
+			@-webkit-keyframes zoomOut {
+			  from {
+			    opacity: 1;
+			  }
+
+			  50% {
+			    opacity: 0;
+			    -webkit-transform: scale3d(.3, .3, .3);
+			    transform: scale3d(.3, .3, .3);
+			  }
+
+			  to {
+			    opacity: 0;
+			  }
+			}
+
+			@keyframes zoomOut {
+			  from {
+			    opacity: 1;
+			  }
+
+			  50% {
+			    opacity: 0;
+			    -webkit-transform: scale3d(.3, .3, .3);
+			    transform: scale3d(.3, .3, .3);
+			  }
+
+			  to {
+			    opacity: 0;
+			  }
+			}
+	    </style>
+	</head>
+	<body>
+		<div id="maskLayer" class="mask-layer">
+			<div id="awesome-dots"></div>
+		</div>
+		<div id="app">
+			<div id="todo">
+				<h1>create by {{name}}</h1>
+				<div class="search-list">
+					<label>Search</label>
+					<input type="text" 
+						v-model="search">
+					<span v-if="tip">search for name or age</span>
+				</div>
+				<div class="add-list">
+					<label for="stdName">name</label>
+					<input id="stdName" type="text"
+						v-model="add.add_name">
+
+					<label for="stdAge">age</label>
+					<input id="stdAge" type="number"
+						v-model="add.add_age">
+
+					<label for="stdDate">date</label>
+					<input id="stdDate" type="date"
+						v-model="add.add_date">
+
+					<label for="stdCompleted">completed</label>
+					<input id="stdCompleted" type="checkbox"
+						v-model="add.add_completed">
+
+					<button type="button" 
+						class="btn btn-success"
+						v-on:click="addList">add data</button>
+				</div>
+				<table class="table table-bordered table-list">
+					<thead>
+						<tr>
+							<th>name</th>
+							<th>age</th>
+							<th>date</th>
+							<th>completed</th>
+							<th>motion</th>
+						</tr>
+					</thead>
+					<!--transition-group代替 <tbody> -->
+					<transition-group tag="tbody" name="zoom" mode="out-in">
+						<tr v-for="(item,index) in students" 
+							v-bind:key="index"
+							v-bind:class="[item.completed ? className.bgGreen : className.bgWhite]">
+							<td>
+								<input type="text"
+									v-if="item.editting"
+									v-model="item.name">
+								<span v-else>{{item.name}}</span>
+							</td>
+							<td>
+								<input type="number"
+									v-if="item.editting"
+									v-model="item.age">
+								<span v-else>{{item.age}}</span>
+							</td>
+							<td>
+								<input type="date"
+									v-if="item.editting"
+									v-model="item.date">
+								<span v-else>{{item.date}}</span>
+							</td>
+							<td>
+								<input type="checkbox"
+									v-if="item.editting"
+									v-model="item.completed">
+								<span v-else>{{item.completed}}</span>
+							</td>
+							<td>
+								<button type="button" class="btn btn-default"
+									v-on:click="editList(index)">
+									edit
+								</button>
+								<button type="button" class="btn btn-default"
+									v-on:click="removeList(index)">
+									delete
+								</button>
+							</td>
+						</tr>
+					</transition-group>
+					<!-- </tbody> -->
+				</table>
+			</div>
+		</div>
+		<script src="https://npmcdn.com/vue@2.0.5/dist/vue.js"></script>
+		<script>
+			window.onload = function(){
+				var maskLayer = document.getElementById("maskLayer");
+				maskLayer.style.display = "none";
+
+				new Vue({
+					el:"#todo",
+					data:function(){
+						return{
+							name:"Mr.Zhang",
+							search:'',
+							tip:true,
+							className:{
+								bgGreen:"bg-green",
+								bgWhite:"bg-white"
+							},
+							add:{
+								add_name:'',
+								add_age:'',
+								add_date:'',
+								add_completed:false
+							},
+							studentList:[
+								{name:"Hu Yue",age:15,date:"2010-11-07",completed:false,editting:false},
+								{name:"Yin Lueyi",age:16,date:"2011-04-05",completed:true,editting:false},
+								{name:"Ming Ting",age:15,date:"2009-09-14",completed:true,editting:false},
+								{name:"Zhang Heng",age:15,date:"2008-08-14",completed:true,editting:false},
+								{name:"Qin Feng",age:14,date:"2010-9-26",completed:false,editting:false}
+							]
+						}
+					},
+					computed:{
+						students:function(){
+							var vm = this
+							return this.studentList.filter(function(item){
+									return (item.name.toLowerCase().indexOf(vm.search.toLowerCase()) !== -1 || item.age == vm.search)
+								})
+						}
+					},
+					methods:{
+						addList:function(){
+							var name = this.add.add_name.trim()
+							var age = this.add.add_age
+							var date = this.add.add_date
+							var completed = this.add.add_completed
+							console.log(completed)
+							this.students.push({
+								name:name,
+								age:age,
+								date:date,
+								completed:completed,
+								editting:false
+							})
+							this.add.add_name = this.add.add_age = this.add.add_date = ''
+						},
+						removeList:function(_index){
+							this.studentList.splice(_index,1)
+						},
+						showTip:function(){
+							this.tip = !this.tip
+						},
+						editList:function(_index){
+							var edit_name = this.students[_index].name
+							this.students[_index].editting = !this.students[_index].editting
+						}
+					}
+				})
+			}
+		</script>
+
+	</body>
+
+</html>

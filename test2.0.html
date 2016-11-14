@@ -10,6 +10,8 @@
 		<meta name="full-screen" content="yes">
 		<meta name="x5-fullscreen" content="true">
 		<title>Vue 2.0</title>
+		<!-- <link rel="stylesheet" href="D:/github/vue/animate.css" /> -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 		<style type="text/css">
 			*{
 				padding:0;
@@ -181,7 +183,7 @@
 				<example-11></example-11>
 			</div>
 		<!--	component end		-->
-
+		<!--	others	-->
 			<div id="example12">
 				<h3>example 12 eq:计算属性</h3>
 				<div>{{message}}</div>
@@ -205,21 +207,224 @@
 				</p>
 				<example-15 v-bind:level="level">Hello World</example-15>
 			</div>
+			<div id="example16">
+				<h3>example 16 eq:自定义指令</h3>
+				<input :value="name" v-focus:ag="message">
+			</div>
+		<!--	others	-->
+		<!--	transition start	-->
+			<div id="exampleA">
+				<h3>example a</h3>
+				<button v-on:click="fade = !fade">toggle</button>
+				<button v-on:click="bounce = !bounce">toggle</button>
+				<transition name="exa-fade">
+					<p v-if="fade">click button you can hidden me</p>
+				</transition>
+				<transition name="exa-bounce">
+					<p v-if="bounce">click button2 you can hidden me</p>
+				</transition>
+			</div>
+			<style>
+				.exa-fade-enter-active,.exa-fade-leave-active{
+					transition:opacity 0.5s;
+				}
+				.exa-fade-enter,.exa-fade-leave-active{
+					opacity:0;
+				}
+				.exa-bounce-enter-active{
+					animation:bounce-in 0.5s;
+				}
+				.exa-bounce-leave-active{
+					animation:bounce-out 0.5s;
+				}
+				@keyframes bounce-in{
+					0%{
+						transform:scale(0);
+					}
+					50%{
+						transform:scale(1.5);
+					}
+					100%{
+						transform:scale(1);
+					}
+				}
+				@keyframes bounce-out{
+					0%{
+						transform:scale(1);
+					}
+					50%{
+						transform:scale(1.5);
+					}
+					100%{
+						transform:scale(0);
+					}
+				}
+			</style>
+			<div id="exampleB">
+				<h3>example b</h3>
+				<button v-on:click="show = !show">toggle</button>
+				<transition 
+					name="custom-classes-transition" 
+					enter-active-class="animated tada" 
+					leave-active-class="animated bounceOutRight"
+					v-on:before-enter="beforeEnter"
+					v-on:after-leave="afterLeave">
+					<p v-if="show">use animate css</p>
+				</transition>
+				<transition
+					appear
+					appear-class="animated zoomOutUp"
+					appear-active-class="animated zoomOutUp">
+					<p v-if="show">use the same animate css</p>
+				</transition>
+			</div>
+			<div id="exampleC">
+				<h3>example c</h3>
+				<transition>
+					<button v-bind:key="docState">
+						{{buttonMess}}
+					</button>
+				</transition>
+			</div>
+			<div id="exampleD">
+				<h3>example d</h3>
+				<input v-model="query">
+				<transition-group tag="ol"
+					name="exd-stagger"
+					enter-active-class="animated fadeInDown"
+					leave-active-class="animated fadeOutUp">
+					<li style="height:30px;margin-left:40px" 
+						v-for="(item,index) in messList"
+						v-bind:key="item.mess"
+						v-bind:data-index="index">
+						{{item.mess}}
+					</li>
+				</transition-group>
+			</div>
+		<!--	transition end	-->
 		</div>
 		<script src="https://npmcdn.com/vue@2.0.5/dist/vue.js"></script>
+		<!-- <script src="D:/sj/vueJS/vue2.0.5.js"></script> -->
 		
-		<script type="text/x-template" id="ex11Temp">
-			<button>x-template</button>
-		</script>
-		<script type="text/x-template">
-			<div>
-				
-			</div>
-		</script>
 		<script>
 			window.onload = function(){
 				var maskLayer = document.getElementById("maskLayer");
 				maskLayer.style.display = "none";
+
+				//example d
+				new Vue({
+					el:"#exampleD",
+					data:{
+						query:'',
+						list:[
+							{mess:"yuiokm"},
+							{mess:"njdkfj"},
+							{mess:"kgnerng"},
+							{mess:"sgkfjng"},
+							{mess:"eroigv"}
+						]
+					},
+					computed:{
+						messList:function(){
+							var vm = this
+							return this.list.filter(function(item){
+								return item.mess.toLowerCase().indexOf(vm.query.toLowerCase()) !== -1
+							})
+						}
+					}
+				})
+
+				//example c
+				new Vue({
+					el:"#exampleC",
+					data:{
+						docState:"saved"
+					},
+					computed:{
+						buttonMess:function(){
+							switch(this.docState){
+								case 'saved' : return 'Edit'
+								case 'edited' : return 'Save'
+								case 'editing' : return 'Cancel'
+							}
+						}
+					}
+				})
+
+				//example b
+				new Vue({
+					el:"#exampleB",
+					data:{
+						show:true
+					},
+					methods:{
+						beforeEnter:function(){
+						//	console.log("before-enter")
+						},
+						afterLeave:function(){
+						//	console.log("after-leave")
+						}
+					}
+				})
+
+				//example a
+				new Vue({
+					el:"#exampleA",
+					data:{
+						fade:true,
+						bounce:true
+					}
+				})
+
+				//example
+				Vue.mixin({
+					created:function(){
+						var my_option = this.$options.my_option
+						if(my_option){
+						//	console.log(my_option)
+						}
+					}
+				})
+				new Vue({
+					my_option:"这是全局mixins"
+				})
+
+				//example
+				var mixin0 = {
+					created:function(){
+						this.hello()
+					},
+					methods:{
+						hello:function(){
+						//	console.log("hello my mixin")
+						}
+					}
+				}
+				var components0 = Vue.extend({
+					mixins:[mixin0]
+				})
+				var showComponents0 = new components0()
+
+				//example 16
+				Vue.directive("focus",{
+					inserted:function(el,binding,vnode){
+					//	console.log("focus your input")
+					//	el.focus()
+						var mess = "name:"+binding.name+" value:"+binding.value+" expression:"+binding.expression+" argument:"+binding.arg+" modifiers:"+JSON.stringify(binding.modifiers)
+					//	console.log(mess)
+					}
+				})//全局指令
+				new Vue({
+					el:"#example16",
+					data:{
+						name:"yes"
+					},
+					methods:{
+						message:function(){
+							console.log(this.name)
+						}
+					}
+				})
 
 				//example 15
 				var ex15GetContent = function(children){
@@ -550,6 +755,14 @@
 					el:"#example0"
 				})
 			}
+		</script>
+		<script type="text/x-template" id="ex11Temp">
+			<button>x-template</button>
+		</script>
+		<script type="text/x-template">
+			<div>
+				
+			</div>
 		</script>
 	</body>
 </html>
